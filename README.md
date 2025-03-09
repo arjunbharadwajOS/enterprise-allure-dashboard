@@ -1,6 +1,6 @@
 # allure-reports-portal
 
-![img](https://i.imgur.com/xpjU8MZ.png)
+![img](![image](https://github.com/user-attachments/assets/832f2bf0-adaf-40e4-9ef0-0f8f287f7563))
 
 Simple allure reports server.
 
@@ -16,19 +16,19 @@ Host your allure reports for multiple projects on the same server.
 create folder:
 
 ```bash
-mkdir allure-reports-portal
+mkdir enterprise-allure-dashboard
 ```
 
-clone project to allure-reports-portal folder:
+clone project to enterprise-allure-dashboard:
 
 ```bash
-git clone  allure-reports-portal
+git clone https://github.com/arjunbharadwajOS/enterprise-allure-dashboard.git
 ```
 
 navigate to allure-reports-portal folder:
 
 ```bash
-cd allure-reports-portal/
+cd enterprise-allure-dashboard/
 ```
 
 ### Docker way
@@ -108,7 +108,7 @@ uploads/
 ```json
 {
   ...
-  "title": "Your_company_name reports portal"
+  "title": "Name of Company portal"
 }
 ```
 
