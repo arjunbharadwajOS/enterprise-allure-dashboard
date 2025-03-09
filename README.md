@@ -1,6 +1,6 @@
 # allure-reports-portal
 
-![img](![image](https://github.com/user-attachments/assets/832f2bf0-adaf-40e4-9ef0-0f8f287f7563))
+![image](https://github.com/user-attachments/assets/1141b767-eab0-41f8-83af-1539cc92336b)
 
 Simple allure reports server.
 
