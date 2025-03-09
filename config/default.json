@@ -1,0 +1,84 @@
+{
+  "port": 3000,
+  "title": "Enterprise Automation Report",
+  "routes": [
+    {
+      "name": "Web Project",
+      "testData": {
+        "totalTestCases": 100,
+        "automatedTestCases": 90,
+        "passedTestCases": 85,
+        "failedTestCases": 15,
+        "tool_language": "Selenium | Java",
+        "testType": "UI",
+        "lastexecutionDate": "2025-02-20",
+        "environment": "Staging"
+      }
+    },
+    {
+      "name": "Mobile Project",
+      "testData": {
+        "totalTestCases": 50,
+        "automatedTestCases": 45,
+        "passedTestCases": 40,
+        "failedTestCases": 10,
+        "tool_language": "Appium | C#",
+        "testType": "UI",
+        "lastexecutionDate": "2025-02-19",
+        "environment": "Production"
+      }
+    },
+    {
+      "name": "API Project",
+      "testData": {
+        "totalTestCases": 60,
+        "automatedTestCases": 55,
+        "passedTestCases": 45,
+        "failedTestCases": 15,
+        "tool_language": "Postman | Javascript",
+        "testType": "API",
+        "lastexecutionDate": "2025-02-21",
+        "environment": "UAT"
+      }
+    },
+    {
+      "name": "First Project",
+      "testData": {
+        "totalTestCases": 60,
+        "automatedTestCases": 55,
+        "passedTestCases": 45,
+        "failedTestCases": 15,
+        "tool_language": "Selenium",
+        "testType": "UI",
+        "lastexecutionDate": "2025-02-21",
+        "environment": "UAT"
+      }
+    },
+    {
+      "name": "Second Project",
+      "testData": {
+        "totalTestCases": 60,
+        "automatedTestCases": 55,
+        "passedTestCases": 15,
+        "failedTestCases": 40,
+        "tool_language": "RestAssured",
+        "testType": "API",
+        "lastexecutionDate": "2025-02-21",
+        "environment": "UAT"
+      }
+    },
+    {
+      "name": "Third Project",
+      "testData": {
+        "totalTestCases": 60,
+        "automatedTestCases": 55,
+        "passedTestCases": 30,
+        "failedTestCases": 25,
+        "tool_language": "Cypress",
+        "testType": "UI",
+        "lastexecutionDate": "2025-02-21",
+        "environment": "UAT"
+      }
+    }
+  ]
+}

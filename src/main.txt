@@ -1,0 +1,178 @@
+import * as path from "path";
+import * as express from "express";
+import * as morgan from "morgan";
+import * as config from "config";
+
+// Define TestData interface
+interface TestData {
+  totalTestCases: number;
+  passedTestCases: number;
+  failedTestCases: number;
+  automatedTestCases: number;
+  executionDate: string;
+  environment: string;
+}
+
+// Define ProjectRoute interface for config
+interface ProjectRoute {
+  name: string;
+  testData: TestData;
+}
+
+let app: express.Application;
+
+async function bootstrap() {
+  app = express();
+  app.use(morgan("dev"));
+
+  // Serve static files
+  app.use(express.static(path.join(__dirname, "..", "uploads")));
+  app.use(express.static(path.join(__dirname, "..", "vendor")));
+
+  // Main route with chart and test data per project
+  app.get("/", (req, res) => {
+    const links = config
+      .get<ProjectRoute[]>("routes")
+      .map((route, index) => {
+        const { name, testData } = route;
+        const passPercentage = ((testData.passedTestCases / testData.totalTestCases) * 100).toFixed(2);
+        const chartId = `testChart-${index}`; // Unique chart ID
+
+        return `
+          <div class="col-sm-6 col-md-4 col-sm-12 col-xs-12">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-header text-center">
+                <h5 class="card-title mb-0">${name}</h5>
+              </div>
+              <div class="card-body">
+                <!-- Test Execution Summary -->
+                <div class="test-info">
+                  <h6 class="text-muted">Test Execution Summary</h6>
+                  <table class="table table-sm table-bordered">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Total Test Cases</th>
+                        <td>${testData.totalTestCases}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Passed</th>
+                        <td class="text-success">${testData.passedTestCases}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Failed</th>
+                        <td class="text-danger">${testData.failedTestCases}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Pass %</th>
+                        <td>${passPercentage}%</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Automated</th>
+                        <td>${testData.automatedTestCases}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Date</th>
+                        <td>${testData.executionDate}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Environment</th>
+                        <td>${testData.environment}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="chart-container">
+                  <canvas id="${chartId}"></canvas>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                <a href="${name}" class="btn btn-primary btn-sm">Open</a>
+              </div>
+
+              <!-- Chart.js Script for ${name} -->
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  Chart.register(ChartDataLabels);
+                  const ctx${index} = document.getElementById('${chartId}').getContext('2d');
+                  new Chart(ctx${index}, {
+                    type: 'pie',
+                    data: {
+                      labels: ['Passed', 'Failed'],
+                      datasets: [{
+                        data: [${testData.passedTestCases}, ${testData.failedTestCases}],
+                        backgroundColor: ['#28a745', '#dc3545'],
+                        borderColor: ['#fff', '#fff'],
+                        borderWidth: 1
+                      }]
+                    },
+                    options: {
+                      responsive: true,
+                      plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: '${name} Test Results' },
+                        datalabels: {
+                          color: '#fff',
+                          formatter: (value) => value, // Show raw numbers
+                          font: { weight: 'bold', size: 14 }
+                        }
+                      }
+                    }
+                  });
+                });
+              </script>
+            </div>
+          </div>`;
+      })
+      .join("");
+
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <base href="/">
+          <link rel="stylesheet" href="bootstrap.min.css">
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+          <style>
+            .chart-container { width: 80%; margin: 15px auto; }
+            .test-info .table { font-size: 0.9em; }
+            .card { border-radius: 8px; }
+            .card-header { background-color: #f8f9fa; }
+            .text-success { color: #28a745 !important; }
+            .text-danger { color: #dc3545 !important; }
+          </style>
+        </head>
+        <body>
+          <div class="row">
+            <div class="col-xs-12 mx-auto text-center">
+              <h1>${config.get("title")}</h1>
+            </div>
+          </div>
+
+          <!-- Routes Section with Embedded Charts and Summaries -->
+          <div class="row col-xs-12 mx-auto">
+            ${links}
+          </div>
+        </body>
+      </html>
+    `);
+  });
+
+  // Set dynamic routes
+  await config.get<ProjectRoute[]>("routes").forEach((project) => {
+    console.log(`project: ${project.name} loaded`);
+    app.use(`/${project.name}`, (req, res) => {
+      res.sendFile(
+        path.resolve(path.join(__dirname, "../uploads", `${project.name}/index.html`))
+      );
+    });
+  });
+
+  await app.listen(config.get<number>("port"));
+  console.log(`Server running on port ${config.get("port")}`);
+}
+
+bootstrap().catch((err) => console.error("Bootstrap error:", err));
