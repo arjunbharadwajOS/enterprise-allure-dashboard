@@ -7,7 +7,7 @@
     "start": "nodemon",
     "dev:lint": "eslint"
   },
-  "repository": "https://github.com/allure-reports-portal",
+  "repository": "https://github.com/arjunbharadwajOS/enterprise-allure-dashboard.git",
   "keywords": [
     "allure",
     "reports",
